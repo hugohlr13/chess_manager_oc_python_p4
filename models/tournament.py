@@ -1,16 +1,37 @@
+from tinydb import TinyDB
+
 """Docstring."""
 
 class Tournament:
     """Tournament"""
 
-    def __init__(self):
-        self.tournamenet_id : None
-        self.tournament_location : None
-        self.tournament_date : None
-        self.tournament_round_number : None
-        self.tournament_player_list : None
-        self.tournament_time_keeper : None
-        self.tournamement_description : None
+    db = TinyDB('data.json', indent=4)
 
-    pass
+    def __init__(self, tournament_name, tournament_location, tournament_date, tournament_time_keeper, tournament_description):
+        self.tournament_name = tournament_name
+        self.tournament_id = tournament_date + tournament_name + tournament_location
+        self.tournament_location = tournament_location
+        self.tournament_date = tournament_date
+        self.tournament_rounds_number = 4
+        self.tournament_round = []
+        self.tournament_player_list = []
+        self.tournament_time_keeper = tournament_time_keeper
+        self.tournament_description = tournament_description
+
+    def save_tournament(self):
+
+        serialized_tournament = {
+            'tournament_id': self.tournament_id,
+            'tournament_name': self.tournament_name,
+            'tournament_location': self.tournament_location,
+            'tournament_date': self.tournament_date,
+            'tournament_rounds': {},
+            'tournament_player_list': {},
+            'tournament_time_keeper': self.tournament_time_keeper,
+            'tournament_description': self.tournament_description
+        }
+
+        tournaments_table = Tournament.db.table("Tournaments")
+        tournaments_table.insert(serialized_tournament)
+
 

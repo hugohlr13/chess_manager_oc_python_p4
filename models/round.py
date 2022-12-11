@@ -3,14 +3,11 @@
 class Round:
     """Round"""
 
-    def __init__(self):
-        self.id_round : None
-        self.id_match : None
-        self.round_name : None
-        self.round_start_date : None
-        self.round_start_time : None
-        self.round_end_date : None
-        self.round_end_time : None
-
-    pass
-
+    def __init__(self, round_name, round_start_date, round_start_time, round_end_date, round_end_time ):
+        self.id_round = round_start_date + round_start_time + round_name
+        self.matches = []
+        self.round_name = round_name
+        self.round_start_date : round_start_date
+        self.round_start_time = round_start_time
+        self.round_end_date = round_end_date
+        self.round_end_time = round_end_time
