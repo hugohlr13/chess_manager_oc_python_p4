@@ -22,14 +22,14 @@ class MainMenuView:
        
 class NewTournamentView:
 
-    def prompt_to_create_tournament(self):
+    def input_to_create_tournament(self):
         tournament_datas = []
 
-        tournament_name = input("\nNom du tournoi: ")
-        tournament_location = input("\nLieu du tournoi: ")
+        tournament_name = input("\nNom du tournoi : ")
+        tournament_location = input("\nLieu du tournoi : ")
         while True:
             tournament_time_keeper = input(
-                "\nChoisissez le contrôle du temps entre 1, 2 ou 3:\n" +
+                "\nChoisissez le contrôle du temps entre 1, 2 ou 3 :\n" +
                 "1 - bullet\n" +
                 "2 - blitz\n" +
                 "3 - coup rapide\n")
@@ -52,3 +52,36 @@ class NewTournamentView:
         tournament_datas.append(tournament_description)
 
         return tournament_datas
+
+class NewPlayerView:
+
+    def input_to_create_player(self):
+        player_datas = []
+
+        player_surname = input("\nNom du joueur : ")
+        player_first_name = input("\nPrénom du joueur : ")
+        player_date_of_birth = input("\nDate de naissance (format jjmmaaaa) : ")
+        while True:
+            player_gender = input(
+                "\nChoisissez le genre du joueur :\n" +
+                "H - Homme\n" +
+                "F - Femme\n" +
+                "A - Autre\n")
+            if player_gender == "H":
+                player_gender = "Homme"
+                break
+            elif player_gender == "F":
+                player_gender = "Femme"
+                break
+            elif player_gender == "A":
+                player_gender = "Autre"
+                break
+            else:
+                continue
+        
+        player_datas.append(player_surname)
+        player_datas.append(player_first_name)
+        player_datas.append(player_date_of_birth)
+        player_datas.append(player_gender)
+
+        return player_datas

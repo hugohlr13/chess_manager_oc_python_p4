@@ -1,8 +1,10 @@
 from views.base import MainMenuView
 from views.base import NewTournamentView
+from views.base import NewPlayerView
 from utils.menus import Menu
 from models.tournament import Tournament
-from datetime import date, time, datetime
+from models.player import Player
+import datetime
 from tinydb import TinyDB
 
 class ApplicationController:
@@ -25,6 +27,7 @@ class MainMenuController:
     def __call__(self):
         # 1. Construire un menu
         self.menu.add("auto", "créer un nouveau tournoi", NewTournamentController())
+        self.menu.add("auto", "créer un profil joueur", NewPlayerController())
         self.menu.add("auto", "ajouter un joueur à un tournoi", AddPlayerTournamentController())
         self.menu.add("auto", "commencer le tournoi", StartTournamentController())
         self.menu.add("auto", "sauvegarder un tournoi en cours", SavePlayingTournamentController())
@@ -49,15 +52,30 @@ class NewTournamentController:
 
     def __call__(self):
         print("dans le controleur de création de tournoi")
-        tournament_datas = self.new_tournament_view.prompt_to_create_tournament()
-        start_tournament_date = date.today()
-        tournament_datas.append(start_tournament_date)
+        tournament_datas = self.new_tournament_view.input_to_create_tournament()
+        today_date = datetime.datetime.today()
+        tournament_date = today_date.strftime("%d%m%Y")
+        tournament_datas.append(tournament_date)
         print(tournament_datas)
         tournament = Tournament(*tournament_datas)
         tournament.save_tournament()
 
-        return tournament
+        return MainMenuController()
 
+class NewPlayerController:
+
+    def __init__(self):
+        self.menu = Menu()
+        self.new_player_view = NewPlayerView()
+
+    def __call__(self):
+        print("dans le controleur de création de joueur")
+        player_datas = self.new_player_view.input_to_create_player()
+        print(player_datas)
+        player = Player(*player_datas)
+        player.save_player()
+
+        return MainMenuController()
 
 class AddPlayerTournamentController:
     pass
