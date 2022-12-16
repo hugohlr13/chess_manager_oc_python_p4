@@ -92,9 +92,20 @@ class AddPlayerTournamentController:
 
     def __init__(self):
         self.add_player_tournament_view = AddPlayerTournamentView()
+
+    def load_tournament_to_add_player(self):
+        tournament_id = self.add_player_tournament_view.input_to_add_player_tournament_id()
+        Tournament_query = Query()
+        tournaments_table = Tournament.dbtournament.table("Tournaments")
+        tournament_to_find = tournaments_table.search(Tournament_query.tournament_id == tournament_id)
+        if tournament_to_find:
+            print(tournament_id)
+
+        return tournament_id
     
     def add_player_tournament(self):
-        print("dans le controleur d'ajout de joueur à un tournoi")
+        tournament_id = self.load_tournament_to_add_player()
+        print("\ndans le controleur d'ajout de joueur à un tournoi")
         player_id = self.add_player_tournament_view.input_to_add_player_id_tournament()
         User = Query()
         players_table = Player.dbplayer.table("Players")
@@ -103,14 +114,6 @@ class AddPlayerTournamentController:
             print(player_id)
         else:
             print("L'Id du joueur n'est pas dans la base de données.")
-        tournament_id = self.add_player_tournament_view.input_to_add_player_tournament_id()
-        Tournament_query = Query()
-        tournaments_table = Tournament.dbtournament.table("Tournaments")
-        tournament_to_find = tournaments_table.search(Tournament_query.tournament_id == tournament_id)
-        if tournament_to_find:
-            print(tournament_id)
-        else:
-            print("L'Id du tournoi n'est pas dans la base de données")
         player_tournament_id = tournament_id + player_id
         print(player_tournament_id)
 
