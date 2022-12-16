@@ -1,4 +1,5 @@
-from tinydb import TinyDB
+from tinydb import TinyDB, where
+from models.player import Player
 
 """Docstring."""
 
@@ -33,3 +34,5 @@ class Tournament:
 
         tournaments_table = Tournament.dbtournament.table("Tournaments")
         tournaments_table.insert(serialized_tournament)
+    
+

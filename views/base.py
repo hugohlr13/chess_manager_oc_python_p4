@@ -4,7 +4,7 @@ class MainMenuView:
         self.menu = menu
 
     def _display_menu(self):
-        print("Bienvenue dans le gestionnaire de tournois d'échec.")
+        print("\nBienvenue dans le gestionnaire de tournois d'échec.")
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
         print()
@@ -85,3 +85,15 @@ class NewPlayerView:
         player_datas.append(player_gender)
 
         return player_datas
+
+
+class AddPlayerTournamentView:
+
+    def input_to_add_player_id_tournament(self):
+        player_id = input("\nId du joueur (format jjmmaaaaNomPrenom) : ")
+        return player_id
+
+    def input_to_add_player_tournament_id(self):
+        tournament_id = input("\nId du tournoi (format jjmmaaaaNomLieu) : ")
+        return tournament_id
+

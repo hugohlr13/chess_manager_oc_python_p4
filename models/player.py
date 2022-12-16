@@ -14,13 +14,14 @@ class Player:
         self.player_id = player_date_of_birth + player_surname + player_first_name 
         self.player_gender = player_gender
 
+
     def save_player(self):
 
         serialized_player = {
             'surname': self.player_surname,
             'first_name': self.player_first_name,
             'date_of_birth':self.player_date_of_birth,
-            'id': self.player_id,
+            'player_id': self.player_id,
             'gender': self.player_gender,
         }
 
