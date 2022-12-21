@@ -88,48 +88,50 @@ class NewPlayerController:
 
 class AddPlayerTournamentController:
 
-    dbplayer_tournament = TinyDB('players_tournaments.json', indent=4)
+    dbplayer_tournament = TinyDB('tournaments_players.json', indent=4)
 
     def __init__(self):
         self.add_player_tournament_view = AddPlayerTournamentView()
 
-    def load_tournament_to_add_player(self):
-        tournament_id = self.add_player_tournament_view.input_to_add_player_tournament_id()
+    def load_tournament(self):
+        tournament_name = self.add_player_tournament_view.input_to_load_tournament()
         Tournament_query = Query()
         tournaments_table = Tournament.dbtournament.table("Tournaments")
-        tournament_to_find = tournaments_table.search(Tournament_query.tournament_id == tournament_id)
+        tournament_to_find = tournaments_table.get(Tournament_query.tournament_name == tournament_name)
+        tournament_id = tournament_to_find.doc_id
         if tournament_to_find:
-            print(tournament_id)
+            print(tournament_to_find)
 
         return tournament_id
+
     
-    def add_player_tournament(self):
-        tournament_id = self.load_tournament_to_add_player()
+    def load_player(self):
         print("\ndans le controleur d'ajout de joueur à un tournoi")
-        player_id = self.add_player_tournament_view.input_to_add_player_id_tournament()
+        player_name = self.add_player_tournament_view.input_to_load_player()
         User = Query()
         players_table = Player.dbplayer.table("Players")
-        player_to_find = players_table.search(User.player_id == player_id)
+        player_to_find = players_table.get(User.player_name == player_name)
         if player_to_find:
-            print(player_id)
+            print(player_to_find)           
         else:
             print("L'Id du joueur n'est pas dans la base de données.")
-        player_tournament_id = tournament_id + player_id
-        print(player_tournament_id)
+        player_id = player_to_find.doc_id
 
-        return player_tournament_id
+        return player_id 
 
-    def save_player_tournament_id(self):
 
-        serialized_player_tournament = {
-            'player_tournament_id': self.add_player_tournament(),
+    def save_tournament_player_id(self):
+
+        serialized_tournament_player = {
+            'tournament_id': self.load_tournament(),
+            'player_id': self.load_player(),
         }
 
-        players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Player_Tournaments")
-        players_tournaments_table.insert(serialized_player_tournament)
+        players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
+        players_tournaments_table.insert(serialized_tournament_player)
 
     def run(self):
-        self.save_player_tournament_id()
+        self.save_tournament_player_id()
         return MainMenuController()
 
 class StartTournamentController:

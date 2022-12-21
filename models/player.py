@@ -7,22 +7,20 @@ class Player:
 
     dbplayer = TinyDB('players.json', indent=4)
 
-    def __init__(self, player_surname, player_first_name, player_date_of_birth, player_gender):
-        self.player_surname = player_surname
+    def __init__(self, player_name, player_first_name, player_date_of_birth, player_gender):
+        self.player_name = player_name
         self.player_first_name = player_first_name
         self.player_date_of_birth = player_date_of_birth
-        self.player_id = player_date_of_birth + player_surname + player_first_name 
         self.player_gender = player_gender
 
 
     def save_player(self):
 
         serialized_player = {
-            'surname': self.player_surname,
-            'first_name': self.player_first_name,
-            'date_of_birth':self.player_date_of_birth,
-            'player_id': self.player_id,
-            'gender': self.player_gender,
+            'player_name': self.player_name,
+            'player_first_name': self.player_first_name,
+            'player_date_of_birth':self.player_date_of_birth,
+            'player_gender': self.player_gender,
         }
 
         players_table = Player.dbplayer.table("Players")

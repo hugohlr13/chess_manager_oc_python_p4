@@ -12,10 +12,6 @@ class Tournament:
         self.tournament_name = tournament_name
         self.tournament_location = tournament_location
         self.tournament_date = tournament_date
-        self.tournament_id = tournament_date + tournament_name + tournament_location
-        self.tournament_rounds_number = 4
-        self.tournament_round = []
-        self.tournament_player_list = []
         self.tournament_time_keeper = tournament_time_keeper
         self.tournament_description = tournament_description
 
@@ -25,9 +21,6 @@ class Tournament:
             'tournament_name': self.tournament_name,
             'tournament_location': self.tournament_location,
             'tournament_date': self.tournament_date,
-            'tournament_id': self.tournament_id,
-            'tournament_rounds': {},
-            'tournament_player_list': {},
             'tournament_time_keeper': self.tournament_time_keeper,
             'tournament_description': self.tournament_description
         }

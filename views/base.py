@@ -58,7 +58,7 @@ class NewPlayerView:
     def input_to_create_player(self):
         player_datas = []
 
-        player_surname = input("\nNom du joueur : ")
+        player_name = input("\nNom du joueur : ")
         player_first_name = input("\nPrénom du joueur : ")
         player_date_of_birth = input("\nDate de naissance (format jjmmaaaa) : ")
         while True:
@@ -79,7 +79,7 @@ class NewPlayerView:
             else:
                 continue
         
-        player_datas.append(player_surname)
+        player_datas.append(player_name)
         player_datas.append(player_first_name)
         player_datas.append(player_date_of_birth)
         player_datas.append(player_gender)
@@ -89,11 +89,11 @@ class NewPlayerView:
 
 class AddPlayerTournamentView:
 
-    def input_to_add_player_id_tournament(self):
-        player_id = input("\nId du joueur (format jjmmaaaaNomPrenom) : ")
-        return player_id
+    def input_to_load_player(self):
+        player_name = input("\nNom du joueur : ")
+        return player_name
 
-    def input_to_add_player_tournament_id(self):
-        tournament_id = input("\nId du tournoi (format jjmmaaaaNomLieu) : ")
-        return tournament_id
+    def input_to_load_tournament(self):
+        tournament_name = input("\nNom du tournoi : ")
+        return tournament_name
 
