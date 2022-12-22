@@ -25,3 +25,4 @@ class Player:
 
         players_table = Player.dbplayer.table("Players")
         players_table.insert(serialized_player)
+

@@ -2,9 +2,12 @@ from views.base import MainMenuView
 from views.base import NewTournamentView
 from views.base import NewPlayerView
 from views.base import AddPlayerTournamentView
+from views.base import GetTournamentView
+from views.base import CreateRoundView
 from utils.menus import Menu
 from models.tournament import Tournament
 from models.player import Player
+from models.round import Round
 import datetime
 from tinydb import TinyDB
 from tinydb import Query
@@ -49,7 +52,6 @@ class MainMenuController:
 class NewTournamentController:
 
     def __init__(self):
-        self.menu = Menu()
         self.new_tournament_view = NewTournamentView()
 
     def create_tournament(self):
@@ -71,7 +73,6 @@ class NewTournamentController:
 class NewPlayerController:
 
     def __init__(self):
-        self.menu = Menu()
         self.new_player_view = NewPlayerView()
 
     def create_player(self):
@@ -91,10 +92,11 @@ class AddPlayerTournamentController:
     dbplayer_tournament = TinyDB('tournaments_players.json', indent=4)
 
     def __init__(self):
+        self.get_tournament_view = GetTournamentView()
         self.add_player_tournament_view = AddPlayerTournamentView()
 
-    def load_tournament(self):
-        tournament_name = self.add_player_tournament_view.input_to_load_tournament()
+    def get_tournament(self):
+        tournament_name = self.get_tournament_view.input_to_get_tournament()
         Tournament_query = Query()
         tournaments_table = Tournament.dbtournament.table("Tournaments")
         tournament_to_find = tournaments_table.get(Tournament_query.tournament_name == tournament_name)
@@ -104,10 +106,8 @@ class AddPlayerTournamentController:
 
         return tournament_id
 
-    
-    def load_player(self):
-        print("\ndans le controleur d'ajout de joueur à un tournoi")
-        player_name = self.add_player_tournament_view.input_to_load_player()
+    def get_player(self):
+        player_name = self.add_player_tournament_view.input_to_get_player()
         User = Query()
         players_table = Player.dbplayer.table("Players")
         player_to_find = players_table.get(User.player_name == player_name)
@@ -117,14 +117,14 @@ class AddPlayerTournamentController:
             print("L'Id du joueur n'est pas dans la base de données.")
         player_id = player_to_find.doc_id
 
-        return player_id 
-
-
+        return player_id
+    
     def save_tournament_player_id(self):
+        print("\ndans le controleur d'ajout de joueur à un tournoi")
 
         serialized_tournament_player = {
-            'tournament_id': self.load_tournament(),
-            'player_id': self.load_player(),
+            'tournament_id': self.get_tournament(),
+            'player_id': self.get_player(),
         }
 
         players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
@@ -135,7 +135,20 @@ class AddPlayerTournamentController:
         return MainMenuController()
 
 class StartTournamentController:
-    pass
+
+    def __init__(self):
+        self.create_round_view = CreateRoundView()
+
+    def create_rounds(self):
+        print("dans le controleur pour démarrer le tournoi")
+        round_name = self.create_round_view.input_to_create_round()
+        print(round_name)
+        round = Round(*round_name)
+        round.save_round()
+
+    def run(self):
+        self.create_rounds()
+        return MainMenuController()
 
 class SavePlayingTournamentController:
     pass

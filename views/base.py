@@ -89,11 +89,18 @@ class NewPlayerView:
 
 class AddPlayerTournamentView:
 
-    def input_to_load_player(self):
+    def input_to_get_player(self):
         player_name = input("\nNom du joueur : ")
         return player_name
 
-    def input_to_load_tournament(self):
+class GetTournamentView:
+
+    def input_to_get_tournament(self):
         tournament_name = input("\nNom du tournoi : ")
         return tournament_name
 
+class CreateRoundView:
+
+    def input_to_create_round(self):
+        round_name = input("\nNom du round : ")
+        return round_name

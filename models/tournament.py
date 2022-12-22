@@ -26,6 +26,4 @@ class Tournament:
         }
 
         tournaments_table = Tournament.dbtournament.table("Tournaments")
-        tournaments_table.insert(serialized_tournament)
-    
-
+        tournaments_table.insert(serialized_tournament) 
