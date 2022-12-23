@@ -1,7 +1,7 @@
 from views.base import MainMenuView
 from views.base import NewTournamentView
 from views.base import NewPlayerView
-from views.base import AddPlayerTournamentView
+from views.base import GetPlayerView
 from views.base import GetTournamentView
 from views.base import CreateRoundView
 from utils.menus import Menu
@@ -93,7 +93,7 @@ class AddPlayerTournamentController:
 
     def __init__(self):
         self.get_tournament_view = GetTournamentView()
-        self.add_player_tournament_view = AddPlayerTournamentView()
+        self.add_player_tournament_view = GetPlayerView()
 
     def get_tournament(self):
         tournament_name = self.get_tournament_view.input_to_get_tournament()
@@ -134,20 +134,46 @@ class AddPlayerTournamentController:
         self.save_tournament_player_id()
         return MainMenuController()
 
+
 class StartTournamentController:
 
     def __init__(self):
         self.create_round_view = CreateRoundView()
+        self.get_tournament = AddPlayerTournamentController()
+   
+    def get_players(self):
+        print("dans le controleur pour démarrer le tournoi (joueurs)")
+        
+        tournament_id = self.get_tournament.get_tournament()
+        print(tournament_id)
+        tournament_players_id = []
+        players_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
+        for player_to_find in players_table:
+            Players = Query()
+            player_to_find = players_table.get(Players.tournament_id == tournament_id)
+            if player_to_find:
+                print(player_to_find)
+            else:
+                print("L'Id du tournoi_joueur n'est pas dans la base de données.")
+            player_to_find = player_to_find.doc_id
+            print(player_to_find)
+            tournament_players_id.append(player_to_find)
 
-    def create_rounds(self):
-        print("dans le controleur pour démarrer le tournoi")
+        print(tournament_players_id)
+        
+    def get_rounds(self):
+        print("dans le controleur pour démarrer le tournoi (rounds)")
+
+        tournament_id = self.get_tournament.get_tournament()
+        print(tournament_id)
         round_name = self.create_round_view.input_to_create_round()
-        print(round_name)
-        round = Round(*round_name)
+        round = Round(round_name, tournament_id)
         round.save_round()
+        
 
     def run(self):
-        self.create_rounds()
+        self.get_players()
+        self.get_rounds()
         return MainMenuController()
 
 class SavePlayingTournamentController:

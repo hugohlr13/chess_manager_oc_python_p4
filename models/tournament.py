@@ -1,5 +1,4 @@
-from tinydb import TinyDB, where
-from models.player import Player
+from tinydb import TinyDB
 
 """Docstring."""
 

@@ -86,8 +86,7 @@ class NewPlayerView:
 
         return player_datas
 
-
-class AddPlayerTournamentView:
+class GetPlayerView:
 
     def input_to_get_player(self):
         player_name = input("\nNom du joueur : ")
