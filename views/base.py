@@ -119,6 +119,6 @@ class GetMatchView:
 class AddMatchResultView:
     
     def input_to_add_match_result(self):
-        score_A = int(input("\nScore du joueur A (0, 0.5 ou 1) :"))
+        score_A = float(input("\nScore du joueur A (0, 0.5 ou 1) :"))
         return score_A
 
