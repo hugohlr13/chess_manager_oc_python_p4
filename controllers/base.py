@@ -6,6 +6,7 @@ from views.base import GetTournamentView
 from views.base import NewRoundView
 from views.base import GetRoundView
 from views.base import GetMatchView
+from views.base import AddMatchResultView
 from utils.menus import Menu
 from models.tournament import Tournament
 from models.player import Player
@@ -226,10 +227,26 @@ class AddMatchResultTournamentController:
 
     def __init__(self):
         self.get_match_view = GetMatchView()
+        self.add_result_match_view = AddMatchResultView()
 
     def get_match(self):
+        match_id = self.get_match_view.input_to_get_match()
+        matches_table = Match.dbmatch.table("Matches")
+        match_datas = matches_table.get(doc_id=match_id)
+        print(match_datas) 
 
-    pass
+    def add_result(self):
+        match_id = self.get_match_view.input_to_get_match()
+        print(match_id)
+        score_A = self.add_result_match_view.input_to_add_match_result()
+        print(type(score_A))
+        matches_table = Match.dbmatch.table("Matches")
+        match_datas = matches_table.update({'score_A': score_A }, doc_ids=[match_id])
+        print(match_datas)
+
+    def run(self):
+        self.add_result()
+        return MainMenuController()
 
 class EndTournamentController:
     pass

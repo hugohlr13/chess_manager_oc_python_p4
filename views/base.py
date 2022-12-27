@@ -113,7 +113,12 @@ class GetRoundView:
 class GetMatchView:
     
     def input_to_get_match(self):
-        match_id = str(input("\nId du match :"))
+        match_id = int(input("\nId du match :"))
         return match_id
 
+class AddMatchResultView:
+    
+    def input_to_add_match_result(self):
+        score_A = int(input("\nScore du joueur A (0, 0.5 ou 1) :"))
+        return score_A
 
