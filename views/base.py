@@ -118,7 +118,11 @@ class GetMatchView:
 
 class AddMatchResultView:
     
-    def input_to_add_match_result(self):
+    def input_to_add_match_result_score_A(self):
         score_A = float(input("\nScore du joueur A (0, 0.5 ou 1) :"))
         return score_A
+
+    def input_to_add_match_result_score_B(self):
+        score_B = float(input("\nScore du joueur B (0, 0.5 ou 1) :"))
+        return score_B
 

@@ -238,10 +238,11 @@ class AddMatchResultTournamentController:
     def add_result(self):
         match_id = self.get_match_view.input_to_get_match()
         print(match_id)
-        score_A = self.add_result_match_view.input_to_add_match_result()
+        score_A = self.add_result_match_view.input_to_add_match_result_score_A()
+        score_B = self.add_result_match_view.input_to_add_match_result_score_B()
         print(type(score_A))
         matches_table = Match.dbmatch.table("Matches")
-        match_datas = matches_table.update({'score_A': score_A }, doc_ids=[match_id])
+        match_datas = matches_table.update({'score_A': score_A, 'score_B': score_B }, doc_ids=[match_id])
         print(match_datas)
 
     def run(self):
