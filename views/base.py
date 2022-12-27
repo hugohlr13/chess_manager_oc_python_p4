@@ -86,6 +86,12 @@ class NewPlayerView:
 
         return player_datas
 
+class NewRoundView:
+
+    def input_to_create_round(self):
+        round_name = input("\nNom du round : ")
+        return round_name
+
 class GetPlayerView:
 
     def input_to_get_player(self):
@@ -98,8 +104,16 @@ class GetTournamentView:
         tournament_name = input("\nNom du tournoi : ")
         return tournament_name
 
-class CreateRoundView:
+class GetRoundView:
 
-    def input_to_create_round(self):
+    def input_to_get_round(self):
         round_name = input("\nNom du round : ")
         return round_name
+
+class GetMatchView:
+    
+    def input_to_get_match(self):
+        match_id = str(input("\nId du match :"))
+        return match_id
+
+
