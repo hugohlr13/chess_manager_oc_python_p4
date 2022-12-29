@@ -23,4 +23,6 @@ class Match:
         }
 
         matches_table = Match.dbmatch.table("Matches")
-        matches_table.insert(serialized_match)     
+        match_id = matches_table.insert(serialized_match)
+
+        return match_id
