@@ -133,6 +133,7 @@ class AddPlayerTournamentController:
         serialized_tournament_player = {
             'tournament_id': self.get_tournament(),
             'player_id': self.get_player(),
+            'player_points': None
         }
 
         players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
@@ -253,44 +254,7 @@ class Round234TournamentController:
         self.get_round = Round1TournamentController()
 
     def get_players_round234(self):
-        tournament_id = self.get_tournament.get_tournament()
-        print(tournament_id)
-        round_id = self.get_round.get_round()
-        print(round_id)
-        players_id = []
-        players_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
-        Players = Query()
-        players_searched = players_table.search(Players.tournament_id == tournament_id)
-        for player in players_searched:
-            player_id = player['player_id']
-            players_id.append(player_id)
-            print(players_id)
-        random.shuffle(players_id)
-        print(players_id)
-        player_A = int(players_id[0])
-        print(player_A)
-        player_B = int(players_id[1])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match.save_match()
-        player_A = int(players_id[2])
-        print(player_A)
-        player_B = int(players_id[3])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match.save_match()
-        player_A = int(players_id[4])
-        print(player_A)
-        player_B = int(players_id[5])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match.save_match()
-        player_A = int(players_id[6])
-        print(player_A)
-        player_B = int(players_id[7])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match.save_match() 
+        pass
 
     def run(self):
         self.get_players_round234()
@@ -301,6 +265,7 @@ class AddMatchResultTournamentController:
     def __init__(self):
         self.get_match_view = GetMatchView()
         self.add_result_match_view = AddMatchResultView()
+        self.get_tournament = AddPlayerTournamentController()
 
     def get_match(self):
         match_id = self.get_match_view.input_to_get_match()
@@ -309,6 +274,8 @@ class AddMatchResultTournamentController:
         print(match_datas) 
 
     def add_result(self):
+        tournament_id = self.get_tournament.get_tournament()
+        print(tournament_id)
         match_id = self.get_match_view.input_to_get_match()
         print(match_id)
         score_A = self.add_result_match_view.input_to_add_match_result_score_A()
@@ -317,6 +284,20 @@ class AddMatchResultTournamentController:
         matches_table = Match.dbmatch.table("Matches")
         match_datas = matches_table.update({'score_A': score_A, 'score_B': score_B }, doc_ids=[match_id])
         print(match_datas)
+        match_players_infos = matches_table.get(doc_id=match_id)
+        print(match_players_infos)
+        player_id = match_players_infos['player_A']  
+        print(player_id)
+        players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
+        Players = Query()
+        tournament_player_searched = players_tournaments_table.search((Players.tournament_id == tournament_id) & (Players.player_id == player_id))
+        print(tournament_player_searched)
+        player_id = match_players_infos ['player_B']
+        print(player_id)
+        players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
+        Players = Query()
+        tournament_player_searched = players_tournaments_table.search((Players.tournament_id == tournament_id) & (Players.player_id == player_id))
+        print(tournament_player_searched)
 
     def run(self):
         self.add_result()
