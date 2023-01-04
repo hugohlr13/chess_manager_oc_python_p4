@@ -1,5 +1,6 @@
 from tinydb import TinyDB
 
+
 class Match:
     """Match"""
 

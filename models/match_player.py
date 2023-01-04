@@ -1,5 +1,6 @@
 from tinydb import TinyDB
 
+
 class Player_A:
 
     dbmatch_player = TinyDB('match_player.json', indent=4)
@@ -19,7 +20,8 @@ class Player_A:
         match_player_table = Player_A.dbmatch_player.table("Match_Player")
         match_player_table.insert(serialized_match_player)
 
-class Player_B: 
+
+class Player_B:
 
     def __init__(self, player_B, match_id):
 
@@ -32,7 +34,5 @@ class Player_B:
             'player_id': self.player_B,
             'match_id': self.match_id,
         }
-
         match_player_table = Player_A.dbmatch_player.table("Match_Player")
         match_player_table.insert(serialized_match_player)
-

@@ -2,6 +2,7 @@ from tinydb import TinyDB
 
 """Docstring."""
 
+
 class Tournament:
     """Tournament"""
 

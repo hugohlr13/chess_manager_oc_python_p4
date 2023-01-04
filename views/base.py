@@ -8,7 +8,7 @@ class MainMenuView:
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
         print()
-    
+
     def get_user_choice(self):
         while True:
             # afficher le menu à l'utilisateur
@@ -19,7 +19,8 @@ class MainMenuView:
             if choice in self.menu:
                 # retourner le choix de l'utilisateur
                 return self.menu[choice]
-       
+
+
 class NewTournamentView:
 
     def input_to_create_tournament(self):
@@ -53,6 +54,7 @@ class NewTournamentView:
 
         return tournament_datas
 
+
 class NewPlayerView:
 
     def input_to_create_player(self):
@@ -60,7 +62,7 @@ class NewPlayerView:
 
         player_name = input("\nNom du joueur : ")
         player_first_name = input("\nPrénom du joueur : ")
-        player_date_of_birth = input("\nDate de naissance (format jjmmaaaa) : ")
+        player_date_of_birth = input("\nDate de naissance (jjmmaaaa) : ")
         while True:
             player_gender = input(
                 "\nChoisissez le genre du joueur :\n" +
@@ -86,11 +88,15 @@ class NewPlayerView:
 
         return player_datas
 
+
 class NewRoundView:
 
     def input_to_create_round(self):
         round_name = input("\nNom du round : ")
+
+
         return round_name
+
 
 class GetPlayerView:
 
@@ -98,11 +104,13 @@ class GetPlayerView:
         player_name = input("\nNom du joueur : ")
         return player_name
 
+
 class GetTournamentView:
 
     def input_to_get_tournament(self):
         tournament_name = input("\nNom du tournoi : ")
         return tournament_name
+
 
 class GetRoundView:
 
@@ -110,11 +118,13 @@ class GetRoundView:
         round_name = input("\nNom du round : ")
         return round_name
 
+
 class GetMatchView:
     
     def input_to_get_match(self):
         match_id = int(input("\nId du match :"))
         return match_id
+
 
 class AddMatchResultView:
     
@@ -122,7 +132,8 @@ class AddMatchResultView:
         score_A = float(input("\nScore du joueur A (0, 0.5 ou 1) :"))
         return score_A
 
+
     def input_to_add_match_result_score_B(self):
         score_B = float(input("\nScore du joueur B (0, 0.5 ou 1) :"))
         return score_B
-
+ 

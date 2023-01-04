@@ -2,6 +2,7 @@ from tinydb import TinyDB
 
 """Docstring."""
 
+
 class Player:
     """Docstring."""
 
@@ -13,13 +14,12 @@ class Player:
         self.player_date_of_birth = player_date_of_birth
         self.player_gender = player_gender
 
-
     def save_player(self):
 
         serialized_player = {
             'player_name': self.player_name,
             'player_first_name': self.player_first_name,
-            'player_date_of_birth':self.player_date_of_birth,
+            'player_date_of_birth': self.player_date_of_birth,
             'player_gender': self.player_gender,
         }
 
