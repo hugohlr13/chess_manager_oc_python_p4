@@ -42,9 +42,9 @@ class MainMenuController:
         self.menu.add("auto", "créer un nouveau tournoi", NewTournamentController())
         self.menu.add("auto", "créer un profil joueur", NewPlayerController())
         self.menu.add("auto", "ajouter un joueur à un tournoi", AddPlayerTournamentController())
-        self.menu.add("auto", "ajouter un round au tournoi", AddRoundTournamentController())
         self.menu.add("auto", "commencer un round", RoundTournamentController())
         self.menu.add("auto", "ajouter les résultats d'un match", AddMatchResultTournamentController())
+        self.menu.add("auto", "ajouter un round au tournoi", AddRoundTournamentController())
         self.menu.add("auto", "afficher les rapports", DisplayListController())
         self.menu.add("auto", "quitter le gestionnaire de tournois d'échec.", ExitController())
 
@@ -69,11 +69,26 @@ class NewTournamentController:
         print(tournament_datas)
         tournament = Tournament(*tournament_datas)
         tournament.save_tournament()
+        tournament_name = tournament_datas[0]
 
-        return tournament
+        return tournament_name
+
+    def create_rounds(self):
+        tournament_name = self.create_tournament()
+        Tournament_query = Query()
+        tournaments_table = Tournament.dbtournament.table("Tournaments")
+        tournament_to_find = tournaments_table.get(Tournament_query.tournament_name == tournament_name)
+        tournament_id = tournament_to_find.doc_id
+        rounds_name = ["Round 1", "Round 2", "Round 3", "Round 4"]
+        rounds_number = [1, 2, 3, 4]
+        for round in range(0,4,1):
+            round_name = rounds_name[round]
+            round_number = rounds_number[round]
+            round = Round(round_name, round_number, tournament_id)
+            round.save_round()
 
     def run(self):
-        self.create_tournament()
+        self.create_rounds()
         return MainMenuController()
 
 
@@ -140,26 +155,6 @@ class AddPlayerTournamentController:
 
     def run(self):
         self.save_tournament_player_id()
-        return MainMenuController()
-
-
-class AddRoundTournamentController:
-
-    def __init__(self):
-        self.get_tournament = AddPlayerTournamentController()
-        self.new_round_view = NewRoundView()
-   
-    def create_round(self):
-        print("dans le controleur pour créer un round")
-        
-        tournament_id = self.get_tournament.get_tournament()
-        print(tournament_id)
-        round_name = self.new_round_view.input_to_create_round()
-        round = Round(round_name, tournament_id)
-        round.save_round()
-
-    def run(self):
-        self.create_round()
         return MainMenuController()
 
 
@@ -264,6 +259,26 @@ class AddMatchResultTournamentController:
 
     def run(self):
         self.add_result()
+        return MainMenuController()
+
+
+class AddRoundTournamentController:
+
+    def __init__(self):
+        self.get_tournament = AddPlayerTournamentController()
+        self.new_round_view = NewRoundView()
+   
+    def create_round(self):
+        print("dans le controleur pour créer un round")
+        
+        tournament_id = self.get_tournament.get_tournament()
+        print(tournament_id)
+        round_name = self.new_round_view.input_to_create_round()
+        round = Round(round_name, tournament_id)
+        round.save_round()
+
+    def run(self):
+        self.create_round()
         return MainMenuController()
 
 
