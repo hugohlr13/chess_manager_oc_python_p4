@@ -92,10 +92,15 @@ class NewPlayerView:
 class NewRoundView:
 
     def input_to_create_round(self):
+        round_datas = []
+
         round_name = input("\nNom du round : ")
+        round_number = input("\nNuméro du round : ")
 
+        round_datas.append(round_name)
+        round_datas.append(round_number)
 
-        return round_name
+        return round_datas
 
 
 class GetPlayerView:
@@ -115,8 +120,8 @@ class GetTournamentView:
 class GetRoundView:
 
     def input_to_get_round(self):
-        round_name = input("\nNom du round : ")
-        return round_name
+        round_number = int(input("\nNuméro du round : "))
+        return round_number
 
 
 class GetMatchView:

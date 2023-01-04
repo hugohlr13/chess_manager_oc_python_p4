@@ -167,15 +167,17 @@ class RoundTournamentController:
     def get_players_round(self):
         tournament_id = self.get_tournament.get_tournament()
         print(tournament_id)
-        round_name = self.get_round_view.input_to_get_round()
-        Round_query = Query()
+        round_number = self.get_round_view.input_to_get_round()
         rounds_table = Round.dbround.table("Rounds")
-        round_to_find = rounds_table.get(Round_query.round_name == round_name)
+        Rounds = Query()
+        round_to_find = rounds_table.get((Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number))
+        print(round_to_find)
         round_id = round_to_find.doc_id
+        print(round_id)
         players_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
         Players = Query()
         players_searched = players_table.search(Players.tournament_id == tournament_id)
-        if round_name == "Round1":
+        if round_number == 1:
             players_id = []
             for player in players_searched:
                 player_id = player['player_id']
@@ -273,8 +275,11 @@ class AddRoundTournamentController:
         
         tournament_id = self.get_tournament.get_tournament()
         print(tournament_id)
-        round_name = self.new_round_view.input_to_create_round()
-        round = Round(round_name, tournament_id)
+        round_datas = self.new_round_view.input_to_create_round()
+        print(round_datas)
+        round_name = round_datas[0]
+        round_number = round_datas[1]
+        round = Round(round_name, round_number, tournament_id)
         round.save_round()
 
     def run(self):
