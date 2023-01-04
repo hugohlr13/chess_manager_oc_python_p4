@@ -43,11 +43,8 @@ class MainMenuController:
         self.menu.add("auto", "créer un profil joueur", NewPlayerController())
         self.menu.add("auto", "ajouter un joueur à un tournoi", AddPlayerTournamentController())
         self.menu.add("auto", "ajouter un round au tournoi", AddRoundTournamentController())
-        self.menu.add("auto", "commencer le round 1", Round1TournamentController())
-        self.menu.add("auto", "commencer le round 2, 3 ou 4", Round234TournamentController())
+        self.menu.add("auto", "commencer un round", RoundTournamentController())
         self.menu.add("auto", "ajouter les résultats d'un match", AddMatchResultTournamentController())
-        self.menu.add("auto", "actualiser le classement des joueurs après la fin d'un tournoi", UpdatePlayerRankingController())
-        self.menu.add("auto", "modifier le classement des joueurs", EditPlayerRankingController())
         self.menu.add("auto", "afficher les rapports", DisplayListController())
         self.menu.add("auto", "quitter le gestionnaire de tournois d'échec.", ExitController())
 
@@ -166,160 +163,59 @@ class AddRoundTournamentController:
         return MainMenuController()
 
 
-class Round1TournamentController:
+class RoundTournamentController:
 
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
         self.get_round_view = GetRoundView()
 
-    def get_round(self):
-        print("\ndans le controleur pour récupérer un round")
+    def get_players_round(self):
+        tournament_id = self.get_tournament.get_tournament()
+        print(tournament_id)
         round_name = self.get_round_view.input_to_get_round()
         Round_query = Query()
         rounds_table = Round.dbround.table("Rounds")
         round_to_find = rounds_table.get(Round_query.round_name == round_name)
         round_id = round_to_find.doc_id
-        if round_to_find:
-            print(round_to_find)
-
-        return round_id
-
-    def get_players_round1(self):
-        tournament_id = self.get_tournament.get_tournament()
-        print(tournament_id)
-        round_id = self.get_round()
-        print(round_id)
-        players_id = []
         players_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
         Players = Query()
         players_searched = players_table.search(Players.tournament_id == tournament_id)
-        for player in players_searched:
-            player_id = player['player_id']
-            players_id.append(player_id)
+        if round_name == "Round1":
+            players_id = []
+            for player in players_searched:
+                player_id = player['player_id']
+                players_id.append(player_id)                
+            random.shuffle(players_id)
             print(players_id)
-        random.shuffle(players_id)
-        print(players_id)
-        player_A = int(players_id[0])
-        print(player_A)
-        player_B = int(players_id[1])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B()
-        player_A = int(players_id[2])
-        print(player_A)
-        player_B = int(players_id[3])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B()
-        player_A = int(players_id[4])
-        print(player_A)
-        player_B = int(players_id[5])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B()
-        player_A = int(players_id[6])
-        print(player_A)
-        player_B = int(players_id[7])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B() 
+            for player in range(0,7,2):
+                player_A = int(players_id[player])
+                player_B = int(players_id[player+1])
+                match = Match(round_id, player_A, player_B)
+                match_id = match.save_match()
+                match_player_A = Player_A(player_A, match_id)
+                match_player_A.save_match_player_id_A()
+                match_player_B = Player_B(player_B, match_id)
+                match_player_B.save_match_player_id_B()
+        else:
+            sorted_players_searched = sorted(players_searched, key=lambda d: d['player_points'], reverse=True)
+            print(sorted_players_searched)
+            players_id = []
+            for player in sorted_players_searched:
+                player_id = player['player_id']
+                players_id.append(player_id)
+            print(players_id)
+            for player in range(0,7,2):
+                player_A = int(players_id[player])
+                player_B = int(players_id[player+1])
+                match = Match(round_id, player_A, player_B)
+                match_id = match.save_match()
+                match_player_A = Player_A(player_A, match_id)
+                match_player_A.save_match_player_id_A()
+                match_player_B = Player_B(player_B, match_id)
+                match_player_B.save_match_player_id_B()
 
     def run(self):
-        self.get_players_round1()
-        return MainMenuController()
-
-
-class Round234TournamentController:
-
-    def __init__(self):
-        self.get_tournament = AddPlayerTournamentController()
-        self.get_round_view = GetRoundView()
-        self.get_round = Round1TournamentController()
-
-    def get_players_round234(self):
-        tournament_id = self.get_tournament.get_tournament()
-        print(tournament_id)
-        round_id = self.get_round.get_round()
-        print(round_id)
-        players_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
-        Players = Query()
-        players_searched = players_table.search(Players.tournament_id == tournament_id)
-        print(players_searched)
-        sorted_players_searched = sorted(players_searched, key=lambda d: d['player_points'], reverse=True)
-        print(sorted_players_searched)
-        players_id = []
-        for player in sorted_players_searched:
-            player_id = player['player_id']
-            players_id.append(player_id)
-            print(players_id)
-        print(players_id)
-        player_A = int(players_id[0])
-        print(player_A)
-        player_B = int(players_id[1])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B()
-        player_A = int(players_id[2])
-        print(player_A)
-        player_B = int(players_id[3])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B()
-        player_A = int(players_id[4])
-        print(player_A)
-        player_B = int(players_id[5])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B()
-        player_A = int(players_id[6])
-        print(player_A)
-        player_B = int(players_id[7])
-        print(player_B)
-        match = Match(round_id, player_A, player_B)
-        match_id = match.save_match()
-        print(match_id)
-        match_player_A = Player_A(player_A, match_id)
-        match_player_A.save_match_player_id_A()
-        match_player_B = Player_B(player_B, match_id)
-        match_player_B.save_match_player_id_B() 
-
-    def run(self):
-        self.get_players_round234()
+        self.get_players_round()
         return MainMenuController()
 
 
@@ -373,15 +269,6 @@ class AddMatchResultTournamentController:
 
 class EndTournamentController:
     pass
-
-
-class UpdatePlayerRankingController:
-    pass
-
-
-class EditPlayerRankingController:
-    pass
-
 
 class DisplayListController:
 
