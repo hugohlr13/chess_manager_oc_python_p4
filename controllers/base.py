@@ -465,7 +465,6 @@ class TournamentPlayerDisplayController:
 
     def get_tournament_players(self):
         tournament_id = self.get_tournament.get_tournament()
-        print(tournament_id)
         tournament_players_id_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
         Players = Query()
         players_searched = tournament_players_id_table.search(Players.tournament_id == tournament_id)
@@ -473,21 +472,12 @@ class TournamentPlayerDisplayController:
         for player in players_searched:
             player_id = player['player_id']
             players_id.append(player_id)
-        print(players_id)
         tournament_players_name = []
-        player_id = players_id[0]
-        tournament_players_name_table = Player.dbplayer.table("Players")
-        player_searched = tournament_players_name_table.get(doc_id=player_id)
-        player_found = player_searched["player_name"]
-        print(player_found)
-        tournament_players_name.append(player_found)
-        print(tournament_players_name)
-        player_id = players_id[2]
-        tournament_players_name_table = Player.dbplayer.table("Players")
-        player_searched = tournament_players_name_table.get(doc_id=player_id)
-        player_found = player_searched["player_name"]
-        print(player_found)
-        tournament_players_name.append(player_found)
+        for player_id in players_id:
+            tournament_players_name_table = Player.dbplayer.table("Players")
+            player_searched = tournament_players_name_table.get(doc_id=player_id)
+            player_found = player_searched["player_name"]
+            tournament_players_name.append(player_found)
         print(tournament_players_name)       
 
     def run(self):
@@ -509,14 +499,16 @@ class RoundMatchListDisplayController():
             round_name = round['round_name']
             rounds_list.append(round_name)
         print(rounds_list)
-        round_name = rounds_list[0]
-        Rounds1 = Query()
-        round_searched = rounds_table.get(Rounds1.round_name == round_name)
-        round_id = round_searched.doc_id
-        matches_table = Match.dbmatch.table("Matches")
-        Matches = Query()
-        matches_searched = matches_table.search(Matches.round_id == round_id)
-        print(matches_searched)
+        matches_list = []
+        for round_name in rounds_list:
+            Rounds = Query()
+            round_searched = rounds_table.get(Rounds.round_name == round_name)
+            round_id = round_searched.doc_id
+            matches_table = Match.dbmatch.table("Matches")
+            Matches = Query()
+            matches_searched = matches_table.search(Matches.round_id == round_id)
+            matches_list.append(matches_searched)
+        print(matches_list)
 
     def run(self):
         self.get_rounds_matches()
