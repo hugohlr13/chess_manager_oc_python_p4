@@ -478,7 +478,8 @@ class TournamentPlayerDisplayController:
             player_searched = tournament_players_name_table.get(doc_id=player_id)
             player_found = player_searched["player_name"]
             tournament_players_name.append(player_found)
-        print(tournament_players_name)       
+        sorted_tournament_players_name = sorted(tournament_players_name)
+        print(sorted_tournament_players_name)       
 
     def run(self):
         self.get_tournament_players()
