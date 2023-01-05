@@ -1,27 +1,21 @@
-from views.base import MainMenuView
-from views.base import NewTournamentView
-from views.base import NewPlayerView
-from views.base import GetPlayerView
-from views.base import GetTournamentView
-from views.base import NewRoundView
-from views.base import GetRoundView
-from views.base import GetMatchView
-from views.base import AddMatchResultView
-from utils.menus import Menu
-from models.tournament import Tournament
-from models.player import Player
-from models.round import Round
-from models.match import Match
-from models.match_player import Player_A, Player_B
 import datetime
 import random
-from tinydb import TinyDB
-from tinydb import Query
+
+from tinydb import Query, TinyDB
 from tinydb.operations import add
+
+from models.match import Match
+from models.match_player import Player_A, Player_B
+from models.player import Player
+from models.round import Round
+from models.tournament import Tournament
+from utils.menus import Menu
+from views.base import (AddMatchResultView, GetMatchView, GetPlayerView,
+                        GetRoundView, GetTournamentView, MainMenuView,
+                        NewPlayerView, NewRoundView, NewTournamentView)
 
 
 class ApplicationController:
-
     def __init__(self):
         self.controller = None
 
@@ -29,10 +23,9 @@ class ApplicationController:
         self.controller = MainMenuController()
         while self.controller:
             self.controller = self.controller.run()
-            
+
 
 class MainMenuController:
-
     def __init__(self):
         self.menu = Menu()
         self.view = MainMenuView(self.menu)
@@ -57,7 +50,6 @@ class MainMenuController:
 
 
 class NewTournamentController:
-
     def __init__(self):
         self.new_tournament_view = NewTournamentView()
 
@@ -65,8 +57,8 @@ class NewTournamentController:
         print("dans le controleur de création de tournoi")
         tournament_datas = self.new_tournament_view.input_to_create_tournament()
         today_date = datetime.datetime.today()
-        tournament_start_date = today_date.strftime("%d%m%Y")
-        tournament_datas.append(tournament_start_date)
+        tournament_start = today_date.strftime("%d%m%Y")
+        tournament_datas.append(tournament_start)
         print(tournament_datas)
         tournament = Tournament(*tournament_datas)
         tournament.save_tournament()
@@ -82,7 +74,7 @@ class NewTournamentController:
         tournament_id = tournament_to_find.doc_id
         rounds_name = ["Round 1", "Round 2", "Round 3", "Round 4"]
         rounds_number = [1, 2, 3, 4]
-        for round in range(0,4,1):
+        for round in range(0, 4, 1):
             round_name = rounds_name[round]
             round_number = rounds_number[round]
             round = Round(round_name, round_number, tournament_id)
@@ -94,7 +86,6 @@ class NewTournamentController:
 
 
 class NewPlayerController:
-
     def __init__(self):
         self.new_player_view = NewPlayerView()
 
@@ -112,7 +103,7 @@ class NewPlayerController:
 
 class AddPlayerTournamentController:
 
-    dbplayer_tournament = TinyDB('tournaments_players.json', indent=4)
+    dbplayer_tournament = TinyDB("tournaments_players.json", indent=4)
 
     def __init__(self):
         self.get_tournament_view = GetTournamentView()
@@ -135,20 +126,20 @@ class AddPlayerTournamentController:
         players_table = Player.dbplayer.table("Players")
         player_to_find = players_table.get(User.player_name == player_name)
         if player_to_find:
-            print(player_to_find)           
+            print(player_to_find)
         else:
             print("L'Id du joueur n'est pas dans la base de données.")
         player_id = player_to_find.doc_id
 
         return player_id
-    
+
     def save_tournament_player_id(self):
         print("\ndans le controleur d'ajout de joueur à un tournoi")
 
         serialized_tournament_player = {
-            'tournament_id': self.get_tournament(),
-            'player_id': self.get_player(),
-            'player_points': float(0)
+            "tournament_id": self.get_tournament(),
+            "player_id": self.get_player(),
+            "player_points": float(0),
         }
 
         players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
@@ -160,7 +151,6 @@ class AddPlayerTournamentController:
 
 
 class RoundMatchTournamentController:
-
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
         self.get_round_view = GetRoundView()
@@ -171,13 +161,15 @@ class RoundMatchTournamentController:
         round_number = self.get_round_view.input_to_get_round()
         rounds_table = Round.dbround.table("Rounds")
         Rounds = Query()
-        round_to_find = rounds_table.get((Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number))
+        round_to_find = rounds_table.get(
+            (Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number)
+        )
         print(round_to_find)
         round_id = round_to_find.doc_id
         print(round_id)
         today_date = datetime.datetime.today()
         round_start_date = today_date.strftime("%d%m%Y")
-        round_data = rounds_table.update({'round_start_date_time': round_start_date}, doc_ids=[round_id])
+        round_data = rounds_table.update({"round_start_date_time": round_start_date}, doc_ids=[round_id])
         print(round_data)
         players_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
         Players = Query()
@@ -185,13 +177,13 @@ class RoundMatchTournamentController:
         if round_number == 1:
             players_id = []
             for player in players_searched:
-                player_id = player['player_id']
-                players_id.append(player_id)                
+                player_id = player["player_id"]
+                players_id.append(player_id)
             random.shuffle(players_id)
             print(players_id)
-            for player in range(0,7,2):
+            for player in range(0, 7, 2):
                 player_A = int(players_id[player])
-                player_B = int(players_id[player+1])
+                player_B = int(players_id[player + 1])
                 match = Match(round_id, player_A, player_B)
                 match_id = match.save_match()
                 match_player_A = Player_A(player_A, match_id)
@@ -199,16 +191,16 @@ class RoundMatchTournamentController:
                 match_player_B = Player_B(player_B, match_id)
                 match_player_B.save_match_player_id_B()
         else:
-            sorted_players_searched = sorted(players_searched, key=lambda d: d['player_points'], reverse=True)
+            sorted_players_searched = sorted(players_searched, key=lambda d: d["player_points"], reverse=True)
             print(sorted_players_searched)
             players_id = []
             for player in sorted_players_searched:
-                player_id = player['player_id']
+                player_id = player["player_id"]
                 players_id.append(player_id)
             print(players_id)
-            for player in range(0,7,2):
+            for player in range(0, 7, 2):
                 player_A = int(players_id[player])
-                player_B = int(players_id[player+1])
+                player_B = int(players_id[player + 1])
                 match = Match(round_id, player_A, player_B)
                 match_id = match.save_match()
                 match_player_A = Player_A(player_A, match_id)
@@ -222,7 +214,6 @@ class RoundMatchTournamentController:
 
 
 class AddMatchResultTournamentController:
-
     def __init__(self):
         self.get_match_view = GetMatchView()
         self.add_result_match_view = AddMatchResultView()
@@ -232,7 +223,7 @@ class AddMatchResultTournamentController:
         match_id = self.get_match_view.input_to_get_match()
         matches_table = Match.dbmatch.table("Matches")
         match_datas = matches_table.get(doc_id=match_id)
-        print(match_datas) 
+        print(match_datas)
 
     def add_result(self):
         tournament_id = self.get_tournament.get_tournament()
@@ -243,25 +234,35 @@ class AddMatchResultTournamentController:
         score_B = self.add_result_match_view.input_to_add_match_result_score_B()
         print(type(score_A))
         matches_table = Match.dbmatch.table("Matches")
-        match_datas = matches_table.update({'score_A': score_A, 'score_B': score_B }, doc_ids=[match_id])
+        match_datas = matches_table.update({"score_A": score_A, "score_B": score_B}, doc_ids=[match_id])
         print(match_datas)
         match_players_infos = matches_table.get(doc_id=match_id)
         print(match_players_infos)
-        player_id = match_players_infos['player_A']  
+        player_id = match_players_infos["player_A"]
         print(player_id)
         players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
         Players = Query()
-        tournament_player_searched = players_tournaments_table.search((Players.tournament_id == tournament_id) & (Players.player_id == player_id))
+        tournament_player_searched = players_tournaments_table.search(
+            (Players.tournament_id == tournament_id) & (Players.player_id == player_id)
+        )
         print(tournament_player_searched)
-        tournament_player_update = players_tournaments_table.update(add('player_points', score_A), ((Players.tournament_id == tournament_id) & (Players.player_id == player_id)))
+        tournament_player_update = players_tournaments_table.update(
+            add("player_points", score_A),
+            ((Players.tournament_id == tournament_id) & (Players.player_id == player_id)),
+        )
         print(tournament_player_update)
-        player_id = match_players_infos ['player_B']
+        player_id = match_players_infos["player_B"]
         print(player_id)
         players_tournaments_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
         Players = Query()
-        tournament_player_searched = players_tournaments_table.search((Players.tournament_id == tournament_id) & (Players.player_id == player_id))
+        tournament_player_searched = players_tournaments_table.search(
+            (Players.tournament_id == tournament_id) & (Players.player_id == player_id)
+        )
         print(tournament_player_searched)
-        tournament_player_update = players_tournaments_table.update(add('player_points', score_B), ((Players.tournament_id == tournament_id) & (Players.player_id == player_id)))
+        tournament_player_update = players_tournaments_table.update(
+            add("player_points", score_B),
+            ((Players.tournament_id == tournament_id) & (Players.player_id == player_id)),
+        )
         print(tournament_player_update)
 
     def run(self):
@@ -270,14 +271,13 @@ class AddMatchResultTournamentController:
 
 
 class AddRoundTournamentController:
-
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
         self.new_round_view = NewRoundView()
-   
+
     def create_round(self):
         print("dans le controleur pour créer un round")
-        
+
         tournament_id = self.get_tournament.get_tournament()
         print(tournament_id)
         round_datas = self.new_round_view.input_to_create_round()
@@ -293,7 +293,6 @@ class AddRoundTournamentController:
 
 
 class EndRoundTournamentController:
-
     def __init__(self):
         self.menu = Menu()
         self.view = MainMenuView(self.menu)
@@ -311,7 +310,6 @@ class EndRoundTournamentController:
 
 
 class EndRoundController:
-
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
         self.get_round_view = GetRoundView()
@@ -322,13 +320,15 @@ class EndRoundController:
         round_number = self.get_round_view.input_to_get_round()
         rounds_table = Round.dbround.table("Rounds")
         Rounds = Query()
-        round_to_find = rounds_table.get((Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number))
+        round_to_find = rounds_table.get(
+            (Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number)
+        )
         print(round_to_find)
         round_id = round_to_find.doc_id
         print(round_id)
         today_date = datetime.datetime.today()
         round_end_date = today_date.strftime("%d%m%Y")
-        round_data = rounds_table.update({'round_end_date_time': round_end_date}, doc_ids=[round_id])
+        round_data = rounds_table.update({"round_end_date_time": round_end_date}, doc_ids=[round_id])
         print(round_data)
 
     def run(self):
@@ -337,26 +337,24 @@ class EndRoundController:
 
 
 class EndTournamentController:
-
     def __init__(self):
-        self.get_tournament = AddPlayerTournamentController()        
+        self.get_tournament = AddPlayerTournamentController()
 
     def end_tournament(self):
         tournament_id = self.get_tournament.get_tournament()
         print(tournament_id)
-        tournaments_table = Tournament.dbtournament.table("Tournaments") 
+        tournaments_table = Tournament.dbtournament.table("Tournaments")
         today_date = datetime.datetime.today()
-        tournament_end_date = today_date.strftime("%d%m%Y")
-        tournament_data = tournaments_table.update({'tournament_end_date': tournament_end_date}, doc_ids=[tournament_id])
-        print(tournament_data) 
-    
+        tournament_end = today_date.strftime("%d%m%Y")
+        tournament_data = tournaments_table.update({"tournament_end": tournament_end}, doc_ids=[tournament_id])
+        print(tournament_data)
+
     def run(self):
         self.end_tournament()
         return MainMenuController()
 
 
 class DisplayReportController:
-
     def __init__(self):
         self.menu = Menu()
         self.view = MainMenuView(self.menu)
@@ -375,8 +373,8 @@ class DisplayReportController:
         # 3. Retourner le controller associé au choix de l'utilisateur au contrôleur principal
         return user_choice.handler
 
-class PlayerReportController:
 
+class PlayerReportController:
     def __init__(self):
         pass
 
@@ -384,7 +382,7 @@ class PlayerReportController:
         players_table = Player.dbplayer.table("Players")
         all_players = []
         for player in players_table:
-            player_name = player['player_name']
+            player_name = player["player_name"]
             all_players.append(player_name)
         sorted_all_players = sorted(all_players)
         print(sorted_all_players)
@@ -393,8 +391,8 @@ class PlayerReportController:
         self.get_all_players()
         return MainMenuController()
 
-class TournamentReportController:
 
+class TournamentReportController:
     def __init__(self):
         pass
 
@@ -402,7 +400,7 @@ class TournamentReportController:
         tournament_table = Tournament.dbtournament.table("Tournaments")
         all_tournaments = []
         for tournament in tournament_table:
-            tournament_name = tournament['tournament_name']
+            tournament_name = tournament["tournament_name"]
             all_tournaments.append(tournament_name)
         sorted_all_tournaments = sorted(all_tournaments)
         print(sorted_all_tournaments)
@@ -411,8 +409,8 @@ class TournamentReportController:
         self.get_all_players()
         return MainMenuController()
 
-class TournamentDateReportController:
 
+class TournamentDateReportController:
     def __init__(self):
         self.get_tournament_name_view = GetTournamentView()
         pass
@@ -423,17 +421,17 @@ class TournamentDateReportController:
         Tournaments = Query()
         tournament_searched = tournament_table.search(Tournaments.tournament_name == tournament_name)
         print(tournament_name)
-        tournament_start_date = tournament_searched[0]["tournament_start_date"]
-        print(tournament_start_date)
-        tournament_end_date = tournament_searched[0]["tournament_end_date"]
-        print(tournament_end_date)
+        tournament_start = tournament_searched[0]["tournament_start"]
+        print(tournament_start)
+        tournament_end = tournament_searched[0]["tournament_end"]
+        print(tournament_end)
 
     def run(self):
         self.get_tournament_date()
         return MainMenuController()
 
-class TournamentPlayerReportController:
 
+class TournamentPlayerReportController:
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
 
@@ -444,7 +442,7 @@ class TournamentPlayerReportController:
         players_searched = tournament_players_id_table.search(Players.tournament_id == tournament_id)
         players_id = []
         for player in players_searched:
-            player_id = player['player_id']
+            player_id = player["player_id"]
             players_id.append(player_id)
         tournament_players_name = []
         for player_id in players_id:
@@ -453,14 +451,14 @@ class TournamentPlayerReportController:
             player_found = player_searched["player_name"]
             tournament_players_name.append(player_found)
         sorted_tournament_players_name = sorted(tournament_players_name)
-        print(sorted_tournament_players_name)       
+        print(sorted_tournament_players_name)
 
     def run(self):
         self.get_tournament_players()
         return MainMenuController()
 
-class RoundMatchReportController:
 
+class RoundMatchReportController:
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
 
@@ -471,13 +469,15 @@ class RoundMatchReportController:
         rounds_searched = rounds_table.search(Rounds.tournament_id == tournament_id)
         rounds_list = []
         for round in rounds_searched:
-            round_number = round['round_number']
+            round_number = round["round_number"]
             rounds_list.append(round_number)
         print(rounds_list)
         matches_list = []
         for round_number in rounds_list:
             Rounds = Query()
-            round_searched = rounds_table.get((Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number))
+            round_searched = rounds_table.get(
+                (Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number)
+            )
             round_id = round_searched.doc_id
             matches_table = Match.dbmatch.table("Matches")
             Matches = Query()
@@ -489,7 +489,7 @@ class RoundMatchReportController:
         self.get_rounds_matches()
         return MainMenuController()
 
-class ExitController:
 
+class ExitController:
     def run(self):
         return None

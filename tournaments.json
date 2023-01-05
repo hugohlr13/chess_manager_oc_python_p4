@@ -1,0 +1,26 @@
+{
+    "Tournaments": {
+        "1": {
+            "tournament_name": "Test",
+            "tournament_location": "T",
+            "tournament_date": "04012023",
+            "tournament_time_keeper": "coup rapide",
+            "tournament_description": "RAS"
+        },
+        "2": {
+            "tournament_name": "Picpus",
+            "tournament_location": "Nation",
+            "tournament_date": "05012023",
+            "tournament_time_keeper": "coup rapide",
+            "tournament_description": "Classique"
+        },
+        "3": {
+            "tournament_name": "Granville",
+            "tournament_location": "Granville",
+            "tournament_start_date": "05012023",
+            "tournament_end_date": "05012023",
+            "tournament_time_keeper": "coup rapide",
+            "tournament_description": "Ras"
+        }
+    }
+}

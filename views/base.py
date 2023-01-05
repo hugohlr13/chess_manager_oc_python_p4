@@ -1,5 +1,4 @@
 class MainMenuView:
-
     def __init__(self, menu):
         self.menu = menu
 
@@ -22,26 +21,26 @@ class MainMenuView:
 
 
 class NewTournamentView:
-
     def input_to_create_tournament(self):
         tournament_datas = []
 
         tournament_name = input("\nNom du tournoi : ")
         tournament_location = input("\nLieu du tournoi : ")
         while True:
-            tournament_time_keeper = input(
-                "\nChoisissez le contrôle du temps entre 1, 2 ou 3 :\n" +
-                "1 - bullet\n" +
-                "2 - blitz\n" +
-                "3 - coup rapide\n")
-            if tournament_time_keeper == "1":
-                tournament_time_keeper = "bullet"
+            tournament_type = input(
+                "\nChoisissez le contrôle du temps entre 1, 2 ou 3 :\n"
+                + "1 - bullet\n"
+                + "2 - blitz\n"
+                + "3 - coup rapide\n"
+            )
+            if tournament_type == "1":
+                tournament_type = "bullet"
                 break
-            elif tournament_time_keeper == "2":
-                tournament_time_keeper = "blitz"
+            elif tournament_type == "2":
+                tournament_type = "blitz"
                 break
-            elif tournament_time_keeper == "3":
-                tournament_time_keeper = "coup rapide"
+            elif tournament_type == "3":
+                tournament_type = "coup rapide"
                 break
             else:
                 continue
@@ -49,14 +48,13 @@ class NewTournamentView:
 
         tournament_datas.append(tournament_name)
         tournament_datas.append(tournament_location)
-        tournament_datas.append(tournament_time_keeper)
+        tournament_datas.append(tournament_type)
         tournament_datas.append(tournament_description)
 
         return tournament_datas
 
 
 class NewPlayerView:
-
     def input_to_create_player(self):
         player_datas = []
 
@@ -65,10 +63,8 @@ class NewPlayerView:
         player_date_of_birth = input("\nDate de naissance (jjmmaaaa) : ")
         while True:
             player_gender = input(
-                "\nChoisissez le genre du joueur :\n" +
-                "H - Homme\n" +
-                "F - Femme\n" +
-                "A - Autre\n")
+                "\nChoisissez le genre du joueur :\n" + "H - Homme\n" + "F - Femme\n" + "A - Autre\n"
+            )
             if player_gender == "H":
                 player_gender = "Homme"
                 break
@@ -80,7 +76,7 @@ class NewPlayerView:
                 break
             else:
                 continue
-        
+
         player_datas.append(player_name)
         player_datas.append(player_first_name)
         player_datas.append(player_date_of_birth)
@@ -90,7 +86,6 @@ class NewPlayerView:
 
 
 class NewRoundView:
-
     def input_to_create_round(self):
         round_datas = []
 
@@ -104,41 +99,34 @@ class NewRoundView:
 
 
 class GetPlayerView:
-
     def input_to_get_player(self):
         player_name = input("\nNom du joueur : ")
         return player_name
 
 
 class GetTournamentView:
-
     def input_to_get_tournament(self):
         tournament_name = input("\nNom du tournoi : ")
         return tournament_name
 
 
 class GetRoundView:
-
     def input_to_get_round(self):
         round_number = int(input("\nNuméro du round : "))
         return round_number
 
 
 class GetMatchView:
-    
     def input_to_get_match(self):
         match_id = int(input("\nId du match :"))
         return match_id
 
 
 class AddMatchResultView:
-    
     def input_to_add_match_result_score_A(self):
         score_A = float(input("\nScore du joueur A (0, 0.5 ou 1) :"))
         return score_A
 
-
     def input_to_add_match_result_score_B(self):
         score_B = float(input("\nScore du joueur B (0, 0.5 ou 1) :"))
         return score_B
- 

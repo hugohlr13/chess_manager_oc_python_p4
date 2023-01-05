@@ -4,7 +4,7 @@ from tinydb import TinyDB
 class Match:
     """Match"""
 
-    dbmatch = TinyDB('matches.json', indent=4)
+    dbmatch = TinyDB("matches.json", indent=4)
 
     def __init__(self, round_id, player_A, player_B):
         self.round_id = round_id
@@ -16,11 +16,11 @@ class Match:
     def save_match(self):
 
         serialized_match = {
-            'round_id': self.round_id,
-            'player_A': self.player_A,
-            'score_A': self.score_A,
-            'player_B': self.player_B,
-            'score_B': self.score_B,
+            "round_id": self.round_id,
+            "player_A": self.player_A,
+            "score_A": self.score_A,
+            "player_B": self.player_B,
+            "score_B": self.score_B,
         }
 
         matches_table = Match.dbmatch.table("Matches")

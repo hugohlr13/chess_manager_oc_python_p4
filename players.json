@@ -1,0 +1,64 @@
+{
+    "Players": {
+        "1": {
+            "player_name": "Huet",
+            "player_first_name": "Hugo",
+            "player_date_of_birth": "13051993",
+            "player_gender": "Homme"
+        },
+        "2": {
+            "player_name": "Leroy",
+            "player_first_name": "Hugo",
+            "player_date_of_birth": "13051994",
+            "player_gender": "Homme"
+        },
+        "3": {
+            "player_name": "Vieri",
+            "player_first_name": "Marine",
+            "player_date_of_birth": "07081994",
+            "player_gender": "Femme"
+        },
+        "4": {
+            "player_name": "Jeanne",
+            "player_first_name": "Martine",
+            "player_date_of_birth": "09111997",
+            "player_gender": "Femme"
+        },
+        "5": {
+            "player_name": "Jean",
+            "player_first_name": "Martin",
+            "player_date_of_birth": "10081998",
+            "player_gender": "Homme"
+        },
+        "6": {
+            "player_name": "Kolo",
+            "player_first_name": "Randal",
+            "player_date_of_birth": "16102000",
+            "player_gender": "Homme"
+        },
+        "7": {
+            "player_name": "Ranger",
+            "player_first_name": "Jessica",
+            "player_date_of_birth": "29011990",
+            "player_gender": "Femme"
+        },
+        "8": {
+            "player_name": "Dupont",
+            "player_first_name": "Bernard",
+            "player_date_of_birth": "01011960",
+            "player_gender": "Homme"
+        },
+        "9": {
+            "player_name": "Rivier",
+            "player_first_name": "Marin",
+            "player_date_of_birth": "07081994",
+            "player_gender": "Homme"
+        },
+        "10": {
+            "player_name": "Tas",
+            "player_first_name": "Thomas",
+            "player_date_of_birth": "13101990",
+            "player_gender": "Homme"
+        }
+    }
+}
