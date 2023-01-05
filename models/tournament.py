@@ -8,10 +8,11 @@ class Tournament:
 
     dbtournament = TinyDB('tournaments.json', indent=4)
 
-    def __init__(self, tournament_name, tournament_location, tournament_time_keeper, tournament_description, tournament_date):
+    def __init__(self, tournament_name, tournament_location, tournament_time_keeper, tournament_description, tournament_start_date):
         self.tournament_name = tournament_name
         self.tournament_location = tournament_location
-        self.tournament_date = tournament_date
+        self.tournament_start_date = tournament_start_date
+        self.tournament_end_date = None
         self.tournament_time_keeper = tournament_time_keeper
         self.tournament_description = tournament_description
 
@@ -20,7 +21,8 @@ class Tournament:
         serialized_tournament = {
             'tournament_name': self.tournament_name,
             'tournament_location': self.tournament_location,
-            'tournament_date': self.tournament_date,
+            'tournament_start_date': self.tournament_start_date,
+            'tournament_end_date': self.tournament_end_date,
             'tournament_time_keeper': self.tournament_time_keeper,
             'tournament_description': self.tournament_description
         }

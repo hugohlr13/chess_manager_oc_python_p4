@@ -95,7 +95,7 @@ class NewRoundView:
         round_datas = []
 
         round_name = input("\nNom du round : ")
-        round_number = input("\nNuméro du round : ")
+        round_number = int(input("\nNuméro du round : "))
 
         round_datas.append(round_name)
         round_datas.append(round_number)

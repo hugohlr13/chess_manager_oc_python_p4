@@ -42,10 +42,11 @@ class MainMenuController:
         self.menu.add("auto", "créer un nouveau tournoi", NewTournamentController())
         self.menu.add("auto", "créer un profil joueur", NewPlayerController())
         self.menu.add("auto", "ajouter un joueur à un tournoi", AddPlayerTournamentController())
-        self.menu.add("auto", "commencer un round", RoundTournamentController())
+        self.menu.add("auto", "commencer un round", RoundMatchTournamentController())
         self.menu.add("auto", "ajouter les résultats d'un match", AddMatchResultTournamentController())
         self.menu.add("auto", "ajouter un round au tournoi", AddRoundTournamentController())
-        self.menu.add("auto", "afficher les rapports", DisplayListController())
+        self.menu.add("auto", "clôturer un round/tournoi", EndRoundTournamentController())
+        self.menu.add("auto", "afficher les rapports", DisplayReportController())
         self.menu.add("auto", "quitter le gestionnaire de tournois d'échec.", ExitController())
 
         # 2. Demander à la vue d'afficher le menu et de collecter la réponse de l'utilisateur
@@ -64,8 +65,8 @@ class NewTournamentController:
         print("dans le controleur de création de tournoi")
         tournament_datas = self.new_tournament_view.input_to_create_tournament()
         today_date = datetime.datetime.today()
-        tournament_date = today_date.strftime("%d%m%Y")
-        tournament_datas.append(tournament_date)
+        tournament_start_date = today_date.strftime("%d%m%Y")
+        tournament_datas.append(tournament_start_date)
         print(tournament_datas)
         tournament = Tournament(*tournament_datas)
         tournament.save_tournament()
@@ -158,7 +159,7 @@ class AddPlayerTournamentController:
         return MainMenuController()
 
 
-class RoundTournamentController:
+class RoundMatchTournamentController:
 
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
@@ -174,6 +175,10 @@ class RoundTournamentController:
         print(round_to_find)
         round_id = round_to_find.doc_id
         print(round_id)
+        today_date = datetime.datetime.today()
+        round_start_date = today_date.strftime("%d%m%Y")
+        round_data = rounds_table.update({'round_start_date_time': round_start_date}, doc_ids=[round_id])
+        print(round_data)
         players_table = AddPlayerTournamentController.dbplayer_tournament.table("Tournaments_Players")
         Players = Query()
         players_searched = players_table.search(Players.tournament_id == tournament_id)
@@ -287,10 +292,7 @@ class AddRoundTournamentController:
         return MainMenuController()
 
 
-class EndTournamentController:
-    pass
-
-class DisplayListController:
+class EndRoundTournamentController:
 
     def __init__(self):
         self.menu = Menu()
@@ -298,11 +300,8 @@ class DisplayListController:
 
     def run(self):
         # 1. Construire un menu
-        self.menu.add("auto", "afficher la liste de tous les joueurs par ordre alphabétique", PlayerListDisplayController())
-        self.menu.add("auto", "afficher la liste de tous les tournois", TournamentListDisplayController())
-        self.menu.add("auto", "afficher la date d'un tournoi donné", TournamentDateDisplayController())
-        self.menu.add("auto", "afficher la liste des joueurs d'un tournoi", TournamentPlayerDisplayController())
-        self.menu.add("auto", "afficher la liste des tours et des matchs du tour", RoundMatchListDisplayController())
+        self.menu.add("auto", "clôturer un round", EndRoundController())
+        self.menu.add("auto", "clôturer un tournoi", EndTournamentController())
 
         # 2. Demander à la vue d'afficher le menu et de collecter la réponse de l'utilisateur
         user_choice = self.view.get_user_choice()
@@ -310,7 +309,73 @@ class DisplayListController:
         # 3. Retourner le controller associé au choix de l'utilisateur au contrôleur principal
         return user_choice.handler
 
-class PlayerListDisplayController:
+
+class EndRoundController:
+
+    def __init__(self):
+        self.get_tournament = AddPlayerTournamentController()
+        self.get_round_view = GetRoundView()
+
+    def end_round(self):
+        tournament_id = self.get_tournament.get_tournament()
+        print(tournament_id)
+        round_number = self.get_round_view.input_to_get_round()
+        rounds_table = Round.dbround.table("Rounds")
+        Rounds = Query()
+        round_to_find = rounds_table.get((Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number))
+        print(round_to_find)
+        round_id = round_to_find.doc_id
+        print(round_id)
+        today_date = datetime.datetime.today()
+        round_end_date = today_date.strftime("%d%m%Y")
+        round_data = rounds_table.update({'round_end_date_time': round_end_date}, doc_ids=[round_id])
+        print(round_data)
+
+    def run(self):
+        self.end_round()
+        return MainMenuController()
+
+
+class EndTournamentController:
+
+    def __init__(self):
+        self.get_tournament = AddPlayerTournamentController()        
+
+    def end_tournament(self):
+        tournament_id = self.get_tournament.get_tournament()
+        print(tournament_id)
+        tournaments_table = Tournament.dbtournament.table("Tournaments") 
+        today_date = datetime.datetime.today()
+        tournament_end_date = today_date.strftime("%d%m%Y")
+        tournament_data = tournaments_table.update({'tournament_end_date': tournament_end_date}, doc_ids=[tournament_id])
+        print(tournament_data) 
+    
+    def run(self):
+        self.end_tournament()
+        return MainMenuController()
+
+
+class DisplayReportController:
+
+    def __init__(self):
+        self.menu = Menu()
+        self.view = MainMenuView(self.menu)
+
+    def run(self):
+        # 1. Construire un menu
+        self.menu.add("auto", "afficher la liste de tous les joueurs par ordre alphabétique", PlayerReportController())
+        self.menu.add("auto", "afficher la liste de tous les tournois", TournamentReportController())
+        self.menu.add("auto", "afficher les dates d'un tournoi", TournamentDateReportController())
+        self.menu.add("auto", "afficher la liste des joueurs d'un tournoi", TournamentPlayerReportController())
+        self.menu.add("auto", "afficher la liste des tours et des matchs du tour", RoundMatchReportController())
+
+        # 2. Demander à la vue d'afficher le menu et de collecter la réponse de l'utilisateur
+        user_choice = self.view.get_user_choice()
+
+        # 3. Retourner le controller associé au choix de l'utilisateur au contrôleur principal
+        return user_choice.handler
+
+class PlayerReportController:
 
     def __init__(self):
         pass
@@ -328,7 +393,7 @@ class PlayerListDisplayController:
         self.get_all_players()
         return MainMenuController()
 
-class TournamentListDisplayController:
+class TournamentReportController:
 
     def __init__(self):
         pass
@@ -346,7 +411,7 @@ class TournamentListDisplayController:
         self.get_all_players()
         return MainMenuController()
 
-class TournamentDateDisplayController:
+class TournamentDateReportController:
 
     def __init__(self):
         self.get_tournament_name_view = GetTournamentView()
@@ -358,14 +423,16 @@ class TournamentDateDisplayController:
         Tournaments = Query()
         tournament_searched = tournament_table.search(Tournaments.tournament_name == tournament_name)
         print(tournament_name)
-        tournament_date = tournament_searched[0]["tournament_date"]
-        print(tournament_date)
+        tournament_start_date = tournament_searched[0]["tournament_start_date"]
+        print(tournament_start_date)
+        tournament_end_date = tournament_searched[0]["tournament_end_date"]
+        print(tournament_end_date)
 
     def run(self):
         self.get_tournament_date()
         return MainMenuController()
 
-class TournamentPlayerDisplayController:
+class TournamentPlayerReportController:
 
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
@@ -392,7 +459,7 @@ class TournamentPlayerDisplayController:
         self.get_tournament_players()
         return MainMenuController()
 
-class RoundMatchListDisplayController():
+class RoundMatchReportController:
 
     def __init__(self):
         self.get_tournament = AddPlayerTournamentController()
@@ -404,13 +471,13 @@ class RoundMatchListDisplayController():
         rounds_searched = rounds_table.search(Rounds.tournament_id == tournament_id)
         rounds_list = []
         for round in rounds_searched:
-            round_name = round['round_name']
-            rounds_list.append(round_name)
+            round_number = round['round_number']
+            rounds_list.append(round_number)
         print(rounds_list)
         matches_list = []
-        for round_name in rounds_list:
+        for round_number in rounds_list:
             Rounds = Query()
-            round_searched = rounds_table.get(Rounds.round_name == round_name)
+            round_searched = rounds_table.get((Rounds.tournament_id == tournament_id) & (Rounds.round_number == round_number))
             round_id = round_searched.doc_id
             matches_table = Match.dbmatch.table("Matches")
             Matches = Query()
