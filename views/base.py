@@ -163,3 +163,13 @@ class AddMatchResultView:
         """Ask user score player B"""
         score_B = float(input("\nScore du joueur B (0, 0.5 ou 1) :"))
         return score_B
+
+
+class ReportView:
+    """View to display report"""
+
+    def display_report(self, datas):
+        print("\n")
+        for data in datas:
+            print(data)
+        print("\n")

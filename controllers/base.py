@@ -14,7 +14,8 @@ from models.tournament import Tournament
 from utils.menus import Menu
 from views.base import (AddMatchResultView, GetMatchView, GetPlayerView,
                         GetRoundView, GetTournamentView, MainMenuView,
-                        NewPlayerView, NewRoundView, NewTournamentView)
+                        NewPlayerView, NewRoundView, NewTournamentView,
+                        ReportView)
 
 
 class ApplicationController:
@@ -497,7 +498,8 @@ class PlayerReportController:
 
     def __init__(self):
         """Initialize the display of the players' report"""
-        pass
+        self.datas = []
+        self.report_view = ReportView()
 
     def get_all_players(self):
         """Displays the player list report in alphabetical order."""
@@ -507,11 +509,13 @@ class PlayerReportController:
             player_name = player["player_name"]
             all_players.append(player_name)
         sorted_all_players = sorted(all_players)
-        print(sorted_all_players)
+        self.datas.append(sorted_all_players)
 
     def run(self):
         """Method to display the player list report"""
+        self.datas = []
         self.get_all_players()
+        self.report_view.display_report(self.datas)
         return MainMenuController()
 
 
@@ -520,7 +524,8 @@ class TournamentReportController:
 
     def __init__(self):
         """Initialize the display of the tournaments' report"""
-        pass
+        self.datas = []
+        self.report_view = ReportView()
 
     def get_all_tournaments(self):
         """Displays the tournament list report in alphabetical order."""
@@ -530,11 +535,13 @@ class TournamentReportController:
             tournament_name = tournament["tournament_name"]
             all_tournaments.append(tournament_name)
         sorted_all_tournaments = sorted(all_tournaments)
-        print(sorted_all_tournaments)
+        self.datas.append(sorted_all_tournaments)
 
     def run(self):
         """Method to display the tournament list report"""
+        self.datas = []
         self.get_all_tournaments()
+        self.report_view.display_report(self.datas)
         return MainMenuController()
 
 
@@ -544,7 +551,8 @@ class TournamentDateReportController:
     def __init__(self):
         """Initialize the display of the dates of a tournament."""
         self.get_tournament_name_view = GetTournamentView()
-        pass
+        self.datas = []
+        self.report_view = ReportView()
 
     def get_tournament_date(self):
         """Displays dates for a given tournament."""
@@ -554,15 +562,17 @@ class TournamentDateReportController:
         tournament_searched = tournament_table.search(
             Tournaments.tournament_name == tournament_name
         )
-        print(tournament_name)
+        self.datas.append(tournament_name)
         tournament_start = tournament_searched[0]["tournament_start"]
-        print(tournament_start)
+        self.datas.append(tournament_start)
         tournament_end = tournament_searched[0]["tournament_end"]
-        print(tournament_end)
+        self.datas.append(tournament_end)
 
     def run(self):
         """Method  to display dates for a given tournament."""
+        self.datas = []
         self.get_tournament_date()
+        self.report_view.display_report(self.datas)
         return MainMenuController()
 
 
@@ -572,6 +582,8 @@ class TournamentPlayerReportController:
     def __init__(self):
         """Initialize the display of the players's list registered in a tournament"""
         self.get_tournament = AddPlayerTournamentController()
+        self.datas = []
+        self.report_view = ReportView()
 
     def get_tournament_players(self):
         """Displays the list of players registered in a tournament."""
@@ -596,11 +608,13 @@ class TournamentPlayerReportController:
             player_found = player_searched["player_name"]
             tournament_players_name.append(player_found)
         sorted_tournament_players_name = sorted(tournament_players_name)
-        print(sorted_tournament_players_name)
+        self.datas.append(sorted_tournament_players_name)
 
     def run(self):
         """Method to display the list of players registered in a tournament."""
+        self.datas = []
         self.get_tournament_players()
+        self.report_view.display_report(self.datas)
         return MainMenuController()
 
 
@@ -610,6 +624,8 @@ class RoundMatchReportController:
     def __init__(self):
         """Initialize the display"""
         self.get_tournament = AddPlayerTournamentController()
+        self.datas = []
+        self.report_view = ReportView()
 
     def get_rounds_matches(self):
         """Displays the list of rounds of a tournament and the matches of each round."""
@@ -621,7 +637,7 @@ class RoundMatchReportController:
         for round in rounds_searched:
             round_number = round["round_number"]
             rounds_list.append(round_number)
-        print(rounds_list)
+        self.datas.append(rounds_list)
         matches_list = []
         for round_number in rounds_list:
             Rounds = Query()
@@ -634,11 +650,13 @@ class RoundMatchReportController:
             Matches = Query()
             matches_searched = matches_table.search(Matches.round_id == round_id)
             matches_list.append(matches_searched)
-        print(matches_list)
+        self.datas.append(matches_list)
 
     def run(self):
         """Method to display the list of rounds of a tournament and the matches of each round."""
+        self.datas = []
         self.get_rounds_matches()
+        self.report_view.display_report(self.datas)
         return MainMenuController()
 
 
