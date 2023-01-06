@@ -1,1 +1,1 @@
-"""Define the views."""
+"""Views init."""

@@ -1,7 +1,5 @@
 from tinydb import TinyDB
 
-"""Docstring."""
-
 
 class Tournament:
     """Tournament"""
@@ -9,8 +7,14 @@ class Tournament:
     dbtournament = TinyDB("tournaments.json", indent=4)
 
     def __init__(
-        self, tournament_name, tournament_location, tournament_type, tournament_description, tournament_start
+        self,
+        tournament_name,
+        tournament_location,
+        tournament_type,
+        tournament_description,
+        tournament_start,
     ):
+
         self.tournament_name = tournament_name
         self.tournament_location = tournament_location
         self.tournament_start = tournament_start
@@ -19,6 +23,7 @@ class Tournament:
         self.tournament_description = tournament_description
 
     def save_tournament(self):
+        """Serialized a tournament to add it in the database."""
 
         serialized_tournament = {
             "tournament_name": self.tournament_name,
